@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { PostagemService } from '../service/postagem.service';
+import { Postagem } from '../model/Postagem';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-feed',
@@ -7,10 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FeedComponent implements OnInit {
 
-  myimage:string ='assets/images/eu.jpg'
-  constructor() { }
+  listaPostagens: Postagem []
+  
+  postagem: Postagem = new Postagem
 
-  ngOnInit(): void {
+  myimage:string ='assets/images/eu.jpg'
+
+  constructor(private postagemService: PostagemService) { }
+
+  ngOnInit() {
+    this.findallPostagens()
+  }
+
+  findallPostagens(){
+    this.postagemService.getAllPostagens().subscribe((resp: Postagem[])=>{
+      this.listaPostagens = resp
+    })
+  }
+
+  publicar(){
+    this.postagemService.postPostagem(this.postagem).subscribe((resp: Postagem)=>{
+      this.postagem = resp
+    })
   }
 
 }
